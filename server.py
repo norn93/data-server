@@ -35,7 +35,7 @@ def index():
     current_temperature = lines[-1].split(",")[-2]
     current_humidity = lines[-1].split(",")[-1]
 
-    return render_template("temperature.html",
+    return render_template("data.html",
         temperatures = temperatures, humidities = humidities, labels = dates)
 
 @app.route("/settings")

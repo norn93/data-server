@@ -12,11 +12,17 @@ var myChart = new Chart(ctx, {
     data: {
   	'labels': {{labels|tojson|safe}},
 	'datasets': [{
-			'label': 'Conditioner Temperature', 
-			'data': {{data|tojson|safe}},
+			'label': 'Temperature', 
+			'data': {{temperatures|tojson|safe}},
 			borderColor: "orange",
 			backgroundColor: "rgba(255, 165, 0, 0.2)"
-		}]
+		},
+        {
+            'label': 'Humidity', 
+            'data': {{humidities|tojson|safe}},
+            borderColor: "blue",
+            backgroundColor: "rgba(0, 0, 255, 0.2)"
+        }]
 	},
     options: {
         scales: {

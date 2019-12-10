@@ -1,0 +1,35 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body>
+<canvas id="myChart"></canvas>
+
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+  	'labels': {{labels|tojson|safe}},
+	'datasets': [{
+			'label': 'Conditioner Temperature', 
+			'data': {{data|tojson|safe}},
+			borderColor: "orange",
+			backgroundColor: "rgba(255, 165, 0, 0.2)"
+		}]
+	},
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 15,
+                    suggestedMax: 25
+                }
+            }]
+        }
+    }
+});       
+</script>
+
+</body>
+</html>

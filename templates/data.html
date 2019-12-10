@@ -15,13 +15,13 @@ var myChart = new Chart(ctx, {
 			'label': 'Temperature', 
 			'data': {{temperatures|tojson|safe}},
 			borderColor: "orange",
-			backgroundColor: "rgba(255, 165, 0, 0.2)"
+			backgroundColor: "rgba(0, 0, 0, 0.0)"
 		},
         {
             'label': 'Humidity', 
             'data': {{humidities|tojson|safe}},
             borderColor: "blue",
-            backgroundColor: "rgba(0, 0, 255, 0.2)"
+            backgroundColor: "rgba(0, 0, 0, 0.0)"
         }]
 	},
     options: {

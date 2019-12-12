@@ -1,9 +1,10 @@
 from flask import Flask, render_template
 import os, sys
+import subprocess
 
 HOME_DIR = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
-LOG_FILENAME = "../tap-switcher/log.log"
-SETPOINT_FILENAME = "../tap-switcher/setpoint.txt"
+LOG_FILENAME = "/home/pi/tap-switcher/log.log"
+SETPOINT_FILENAME = "/home/pi/tap-switcher/setpoint.txt"
 READINGS_PER_MINUTE = 1
 
 if LOG_FILENAME == "<add this in>" or SETPOINT_FILENAME == "<add this in>":
@@ -43,8 +44,12 @@ def index():
 def settings():
     with open(LOG_FILENAME, "r") as f:
         lines = f.readlines()
-    current_temperature = lines[-1].split(",")[-1]
-    with open(SETPOINT_FILENAME, "r+") as f:
+
+    # Now, your custom field stuff
+    current_temperature = lines[-1].split(",")[-2]
+    current_humidity = lines[-1].split(",")[-1]
+
+    with open(SETPOINT_FILENAME, "r") as f:
         setpoint = f.read()
     return render_template("settings.html", temperature = current_temperature, humidity = current_humidity, setpoint = setpoint)
 
@@ -53,6 +58,13 @@ def setTemperature(set_temperature):
     with open(SETPOINT_FILENAME, "w+") as f:
         f.write(set_temperature)
     return "<h1>Setting setpoint to " + set_temperature + "</h1>"
+
+@app.route("/recent")
+def recent():
+    result = "<h1>Recent</h1>"
+    for line in subprocess.check_output(["tail", LOG_FILENAME]).decode("utf-8").split("\n"):
+        result = result + "<p>" + line + "</p>"
+    return result
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000, host='0.0.0.0')

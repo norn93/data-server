@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import os, sys
 import subprocess
+import json, datetime
 
 HOME_DIR = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
 LOG_FILENAME = "/home/pi/tap-switcher/log.log"
@@ -65,6 +66,28 @@ def recent():
     for line in subprocess.check_output(["tail", LOG_FILENAME]).decode("utf-8").split("\n"):
         result = result + "<p>" + line + "</p>"
     return result
+
+@app.route("/status")
+def status():
+    date_str, temperature, humidity = subprocess.check_output(["tail", LOG_FILENAME]).decode("utf-8").split("\n")[-2].split(", ")
+    this_date = datetime.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f")
+    healthy_dht = (datetime.datetime.now() - this_date).seconds < 70
+    response = [
+        {
+            "name": "dht22",
+            "healthy": healthy_dht,
+            "detail" : {"lastDatetime": str(this_date)},
+        },
+        {
+            "name": "temperature",
+            "status:": temperature,
+        },
+        {
+            "name": "humidity",
+            "status": humidity,
+        }
+    ]
+    return json.dumps(response)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000, host='0.0.0.0')
